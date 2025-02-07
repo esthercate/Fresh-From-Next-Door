@@ -3,6 +3,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import productsRoutes from './routes/productsRoutes.js';
+import usersRoutes from './routes/usersRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -15,6 +16,7 @@ app.use(cors());
 app.use(express.json()); // Allows handling JSON requests
 
 app.use('/api/products', productsRoutes);
+app.use('/api/users', usersRoutes);
 
 // Load environment variables
 const PORT = process.env.PORT || 5500;
