@@ -1,0 +1,22 @@
+# Node.js dependencies
+/node_modules/
+
+# Build output
+/dist
+/build
+
+# Log files
+*.log
+
+# Environment files
+.env
+
+# Mac system files
+.DS_Store
+
+# IDE configurations
+.vscode/
+.idea/
+
+# npm packages
+package-lock.json
