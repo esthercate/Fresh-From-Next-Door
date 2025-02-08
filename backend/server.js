@@ -4,12 +4,14 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import productsRoutes from './routes/productsRoutes.js';
 import usersRoutes from './routes/usersRoutes.js';
+import setupSwagger from './swagger.js';
 
 // Load environment variables
 dotenv.config();
 
 // Initialize Express App
 const app = express();
+setupSwagger(app);
 
 // Middleware
 app.use(cors());
