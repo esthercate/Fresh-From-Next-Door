@@ -6,13 +6,13 @@ import User from '../models/User.js';
 
 let mongoServer;
 
-// 🟢 Setup In-Memory MongoDB before tests
+// Setup In-Memory MongoDB before tests
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   await mongoose.connect(mongoServer.getUri());
 });
 
-// 🔴 Cleanup after all tests
+// Cleanup after all tests
 afterAll(async () => {
   await mongoose.connection.close();
   await mongoServer.stop();
@@ -45,6 +45,6 @@ describe('GET /api/users/all', () => {
     expect(res.body.length).toBe(2);
     expect(res.body[0]).toHaveProperty('name', 'John Doe');
     expect(res.body[0]).toHaveProperty('email', 'john@example.com');
-    expect(res.body[0]).not.toHaveProperty('password'); // ❌ Password should not be exposed
+    expect(res.body[0]).not.toHaveProperty('password'); 
   });
 });
