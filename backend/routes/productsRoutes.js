@@ -10,12 +10,14 @@ import {
 import productDocs from '../documentation/productsDocs.js';
 
 const router = express.Router();
-productDocs(router);
 
 router.get('/', getProducts);
 router.post('/', createProduct);
 router.get('/:id', getProductById);
 router.put('/:id', updateProduct);
 router.delete('/:id', deleteProduct);
+
+// place this after routes for it to work
+productDocs(router);
 
 export default router;

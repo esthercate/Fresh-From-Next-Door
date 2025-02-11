@@ -11,7 +11,6 @@ dotenv.config();
 
 // Initialize Express App
 const app = express();
-setupSwagger(app);
 
 // Middleware
 app.use(cors());
@@ -19,6 +18,9 @@ app.use(express.json()); // Allows handling JSON requests
 
 app.use('/api/products', productsRoutes);
 app.use('/api/users', usersRoutes);
+
+// place this after routes for it to work
+setupSwagger(app);
 
 // Load environment variables
 const PORT = process.env.PORT || 5500;

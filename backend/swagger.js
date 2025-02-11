@@ -9,7 +9,7 @@ const options = {
       version: '1.0.0',
       description: 'API documentation for products and users',
     },
-    servers: [{ url: 'http://localhost:5500' }],
+    servers: [{ url: 'http://localhost:5000' }],
     components: {
       schemas: {
         // ✅ User Schema

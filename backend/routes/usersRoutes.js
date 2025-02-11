@@ -7,10 +7,12 @@ import {
 import userDocs from '../documentation/usersDocs.js';
 
 const router = express.Router();
-userDocs(router);
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.get('/all', getUsers);
+
+// place this after routes for it to work
+userDocs(router);
 
 export default router;
