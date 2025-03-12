@@ -7,6 +7,7 @@ import { CategoryList } from './components/CategoryList';
 import { ProductCard } from './components/ProductCard';
 import { fetchProducts } from '@/utils/api'; // ✅ Import fetchProducts
 import { NotFound } from '../common/NotFound';
+import { Filters } from '../filters';
 
 // Define TypeScript types for Product
 interface Product {
@@ -94,29 +95,34 @@ export const Shop: React.FC = () => {
 				/>
 
 				{/* Loading State */}
-				{loading ? (
-					<p className="text-center text-lg font-semibold">
-						Loading products...
-					</p>
-				) : (
-					<div className="flex gap-4 md:gap-5 items-center flex-wrap">
-						{products.length > 0 ? (
-							products.map((product, index) => (
-								<ProductCard
-									key={product.id ?? `product-${index}`}
-									product={product}
-								/>
-							))
-						) : (
-							<div className="w-full">
-								<NotFound
-									title="No Product Found"
-									description="We can't find any item matching your search"
-								/>
-							</div>
-						)}
+				<div className="flex justify-between gap-6 w-full">
+					<div className="w-1/2">
+						<Filters />
 					</div>
-				)}
+					{loading ? (
+						<p className="text-center text-lg font-semibold">
+							Loading products...
+						</p>
+					) : (
+						<div className="flex gap-4 md:gap-5 items-center flex-wrap">
+							{products.length > 0 ? (
+								products.map((product, index) => (
+									<ProductCard
+										key={product.id ?? `product-${index}`}
+										product={product}
+									/>
+								))
+							) : (
+								<div className="w-full">
+									<NotFound
+										title="No Product Found"
+										description="We can't find any item matching your search"
+									/>
+								</div>
+							)}
+						</div>
+					)}
+				</div>
 			</Container>
 		</div>
 	);
