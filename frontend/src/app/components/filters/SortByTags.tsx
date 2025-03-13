@@ -1,11 +1,9 @@
 import React from 'react';
 
-type Props = {};
-
 // Define the tags
-const tags = ['organic', 'healthy', 'natural', 'latest', 'Seeds'];
+const tags = ['Organic', 'Healthy', 'Natural', 'Latest', 'Fresh', 'Local'];
 
-export const SortByTags = (props: Props) => {
+export const SortByTags = () => {
 	return (
 		<div className="flex flex-col gap-3">
 			<p className="border-b border-grey pb-1 text-xs font-semibold">
