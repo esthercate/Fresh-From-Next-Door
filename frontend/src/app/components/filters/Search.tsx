@@ -17,12 +17,17 @@ export const Search = ({ onSearch }: SearchProps) => {
 
 	return (
 		<div className="flex flex-col gap-3">
-			<Label
-				htmlFor="search"
-				className="text-xs font-semibold"
-			>
-				Search
-			</Label>
+			<div className="flex justify-between items-center">
+				<Label
+					htmlFor="search"
+					className="text-xs font-semibold"
+				>
+					Search
+				</Label>
+				<button className="hover:bg-green rounded-full text-xs w-fit px-2 py-0.5 text-green bg-white hover:text-white border border-green cursor-pointer">
+					Reset
+				</button>
+			</div>
 			<Input
 				type="text"
 				id="search"
