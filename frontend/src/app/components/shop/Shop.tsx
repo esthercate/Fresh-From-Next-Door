@@ -8,19 +8,7 @@ import { ProductCard } from './components/ProductCard';
 import { fetchProducts } from '@/utils/api'; // ✅ Import fetchProducts
 import { NotFound } from '../common/NotFound';
 import { Filters } from '../filters';
-
-// Define TypeScript types for Product
-interface Product {
-	id: number;
-	name: string;
-	category: string;
-	image: string;
-	price: number;
-	rating: {
-		average: number;
-		count: number;
-	};
-}
+import { HighlightFilters, Product } from '@/types';
 
 // Define available categories (UI names)
 const categories: string[] = [
@@ -51,6 +39,13 @@ export const Shop: React.FC = () => {
 	const [products, setProducts] = useState<Product[]>([]);
 	const [allProducts, setAllProducts] = useState<Product[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
+	const [searchQuery, setSearchQuery] = useState<string>('');
+	const [highlightFilters, setHighlightFilters] = useState<HighlightFilters>({
+		dealOfTheDay: false,
+		freeShipping: false,
+		bestSellers: false,
+		latest: false,
+	});
 
 	// Fetch all products from API on mount
 	useEffect(() => {
@@ -65,19 +60,50 @@ export const Shop: React.FC = () => {
 		loadProducts();
 	}, []);
 
-	// Update products when category is selected
+	// Filter products based on category and search query
 	useEffect(() => {
-		if (selectedCategory === 'All') {
-			setProducts(allProducts);
-		} else {
+		let filteredProducts = allProducts;
+
+		// filter by category
+		if (selectedCategory !== 'All') {
 			const formattedCategory = formatCategory(selectedCategory);
-			setProducts(
-				allProducts.filter(
-					(product) => product.category.toLowerCase() === formattedCategory
-				)
+			filteredProducts = filteredProducts.filter(
+				(product) => product.category.toLowerCase() === formattedCategory
 			);
 		}
-	}, [selectedCategory, allProducts]);
+
+		// filter by search by product name
+		if (searchQuery) {
+			filteredProducts = filteredProducts.filter((product) =>
+				product.name.toLowerCase().includes(searchQuery.toLowerCase())
+			);
+		}
+
+		// Filter by highlights
+		if (highlightFilters.dealOfTheDay) {
+			filteredProducts = filteredProducts.filter(
+				(product) => product.dealOfTheDay
+			);
+		}
+		if (highlightFilters.freeShipping) {
+			filteredProducts = filteredProducts.filter(
+				(product) => product.shippingCost === 0
+			);
+		}
+		if (highlightFilters.bestSellers) {
+			filteredProducts = filteredProducts.filter(
+				(product) => product.isBestSeller
+			);
+		}
+		if (highlightFilters.latest) {
+			filteredProducts = filteredProducts.sort(
+				(a, b) =>
+					new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+			);
+		}
+
+		setProducts(filteredProducts);
+	}, [selectedCategory, searchQuery, highlightFilters, allProducts]);
 
 	return (
 		<div
@@ -95,33 +121,38 @@ export const Shop: React.FC = () => {
 				/>
 
 				{/* Loading State */}
-				<div className="flex justify-between gap-6 w-full">
-					<div className="w-1/2">
-						<Filters />
+				<div className="flex justify-between gap-2 w-full">
+					<div className="w-1/5">
+						<Filters
+							onSearch={setSearchQuery}
+							onFilterChange={setHighlightFilters}
+						/>
 					</div>
-					{loading ? (
-						<p className="text-center text-lg font-semibold">
-							Loading products...
-						</p>
-					) : (
-						<div className="flex gap-4 md:gap-5 items-center flex-wrap">
-							{products.length > 0 ? (
-								products.map((product, index) => (
-									<ProductCard
-										key={product.id ?? `product-${index}`}
-										product={product}
-									/>
-								))
-							) : (
-								<div className="w-full">
-									<NotFound
-										title="No Product Found"
-										description="We can't find any item matching your search"
-									/>
-								</div>
-							)}
-						</div>
-					)}
+					<div className="w-3/4">
+						{loading ? (
+							<p className="text-center text-lg font-semibold">
+								Loading products...
+							</p>
+						) : (
+							<div className="flex gap-4 md:gap-5 items-center flex-wrap">
+								{products.length > 0 ? (
+									products.map((product, index) => (
+										<ProductCard
+											key={product.id ?? `product-${index}`}
+											product={product}
+										/>
+									))
+								) : (
+									<div className="w-full">
+										<NotFound
+											title="No Product Found"
+											description="We can't find any item matching your search"
+										/>
+									</div>
+								)}
+							</div>
+						)}
+					</div>
 				</div>
 			</Container>
 		</div>
