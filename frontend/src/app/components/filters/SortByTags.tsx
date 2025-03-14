@@ -1,9 +1,14 @@
 import React from 'react';
 
+type SortByTagsProps = {
+	selectedTags: string[];
+	onTagToggle: (tag: string) => void;
+};
+
 // Define the tags
 const tags = ['Organic', 'Healthy', 'Natural', 'Latest', 'Fresh', 'Local'];
 
-export const SortByTags = () => {
+export const SortByTags = ({ selectedTags, onTagToggle }: SortByTagsProps) => {
 	return (
 		<div className="flex flex-col gap-3">
 			<p className="border-b border-grey pb-1 text-xs font-semibold">
@@ -13,7 +18,12 @@ export const SortByTags = () => {
 				{tags.map((tag) => (
 					<div
 						key={tag}
-						className="bg-green rounded-full text-xs w-fit px-2 py-0.5 text-white hover:bg-white hover:text-green border border-green cursor-pointer"
+						className={`rounded-full text-xs w-fit px-2 py-0.5 cursor-pointer border border-green ${
+							selectedTags.includes(tag)
+								? 'bg-white text-green'
+								: 'bg-green text-white hover:bg-white hover:text-green'
+						}`}
+						onClick={() => onTagToggle(tag)}
 					>
 						{tag}
 					</div>

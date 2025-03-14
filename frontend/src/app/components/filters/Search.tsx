@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 type SearchProps = {
 	onSearch: (query: string) => void; // Function to handle search input
+	query: string;
 };
 
-export const Search = ({ onSearch }: SearchProps) => {
-	const [query, setQuery] = useState('');
+export const Search = ({ onSearch, query }: SearchProps) => {
+	const [localQuery, setLocalQuery] = useState(query);
+
+	// Sync local state with external prop when query updates (reset case)
+	useEffect(() => {
+		setLocalQuery(query);
+	}, [query]);
 
 	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const newQuery = event.target.value;
-		setQuery(newQuery);
-		onSearch(newQuery); // Call the onSearch function with the new query
+		setLocalQuery(newQuery);
+		onSearch(newQuery);
 	};
 
 	return (
@@ -24,15 +30,12 @@ export const Search = ({ onSearch }: SearchProps) => {
 				>
 					Search
 				</Label>
-				<button className="hover:bg-green rounded-full text-xs w-fit px-2 py-0.5 text-green bg-white hover:text-white border border-green cursor-pointer">
-					Reset
-				</button>
 			</div>
 			<Input
 				type="text"
 				id="search"
 				placeholder="Search by name"
-				value={query}
+				value={localQuery || ''}
 				onChange={handleInputChange}
 			/>
 		</div>

@@ -46,12 +46,26 @@ export const Shop: React.FC = () => {
 		bestSellers: false,
 		latest: false,
 	});
+	const [selectedTags, setSelectedTags] = useState<string[]>([]);
+	const [priceRange, setPriceRange] = useState<[number, number]>([0, 100]);
+
+	const resetFilters = () => {
+		setSearchQuery('');
+		setHighlightFilters({
+			dealOfTheDay: false,
+			freeShipping: false,
+			bestSellers: false,
+			latest: false,
+		});
+		setSelectedTags([]);
+		setPriceRange([0, 100]);
+	};
 
 	// Fetch all products from API on mount
 	useEffect(() => {
 		const loadProducts = async () => {
 			setLoading(true);
-			const data = await fetchProducts(); // ✅ Fetch data from utils/api.ts
+			const data = await fetchProducts(); // Fetch data from utils/api.ts
 			setAllProducts(data);
 			setProducts(data);
 			setLoading(false);
@@ -101,9 +115,32 @@ export const Shop: React.FC = () => {
 					new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
 			);
 		}
+		// Filter by tags
+		if (selectedTags.length > 0) {
+			filteredProducts = filteredProducts.filter((product) =>
+				selectedTags.some((tag) =>
+					product.tags.some(
+						(productTag) => productTag.toLowerCase() === tag.toLowerCase()
+					)
+				)
+			);
+		}
+
+		// Filter by price range
+		filteredProducts = filteredProducts.filter(
+			(product) =>
+				product.price >= priceRange[0] && product.price <= priceRange[1]
+		);
 
 		setProducts(filteredProducts);
-	}, [selectedCategory, searchQuery, highlightFilters, allProducts]);
+	}, [
+		selectedCategory,
+		searchQuery,
+		highlightFilters,
+		selectedTags,
+		priceRange,
+		allProducts,
+	]);
 
 	return (
 		<div
@@ -126,6 +163,17 @@ export const Shop: React.FC = () => {
 						<Filters
 							onSearch={setSearchQuery}
 							onFilterChange={setHighlightFilters}
+							onTagToggle={(tag) => {
+								setSelectedTags((prevTags) =>
+									prevTags.includes(tag)
+										? prevTags.filter((t) => t !== tag)
+										: [...prevTags, tag]
+								);
+							}}
+							selectedTags={selectedTags}
+							onPriceChange={setPriceRange}
+							resetFilters={resetFilters}
+							searchQuery={searchQuery}
 						/>
 					</div>
 					<div className="w-3/4">
